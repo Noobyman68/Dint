@@ -16,18 +16,19 @@ def parse_program(self):
         nodes = []
         while self.peek():
             nodes.append(self.parse_statement())
-        return node("Program", nodes)
+        return node("head", nodes)
 
     def parse_statement(self):
         token = self.peek()
-        if token.T_type == "T_VAR":
-            return self.parse_var_decl()
-        elif token.T_type == "T_ID":
-            return self.parse_assignment()
-        elif token.T_type == "T_RETURN":
-            return self.parse_return()
-        else:
-            raise SyntaxError(f"Unexpected token {token.T_type} at position {self.pos}")
+        match token.T_type:
+            case "T_VAR":
+                return self.parse_var_decl()
+            case "T_ID":
+                return self.parse_assignment()
+            case "T_RETURN":
+                return self.parse_return()
+            case _:
+                raise SyntaxError(f"Unexpected token {token.T_type} at position {self.pos}")
 
     def parse_var_decl(self):
         self.expect("T_VAR")
@@ -120,3 +121,7 @@ def parse_statement(self):
         return self.parse_function()
     else:
         raise SyntaxError(f"Unexpected token {token.T_type} at position {self.pos}")
+
+with open("output.txt","r") as file:
+    lines = file.readlines()
+
